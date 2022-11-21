@@ -1,0 +1,41 @@
+doctype html head meta(charset='UTF-8') meta(http-equiv='X-UA-Compatible', content='IE=edge')
+meta(name='viewport', content='width=device-width, initial-scale=1.0') title Document p
+
+
+
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+PREFIX ontology: <http://dbpedia.org/ontology/> 
+SELECT distinct ?authorLink ?bookLink ?bookName ?bookAbstract (MAX(?numberOfPages) as ?numberOfPages) ?comment WHERE { 
+?bookLink rdf:type ontology:Book; 
+rdfs:label ?bookName; 
+dbo:abstract ?bookAbstract; 
+rdfs:comment ?comment; 
+ontology:author ?authorLink. 
+OPTIONAL {?bookLink dbo:numberOfPages ?numberOfPages.}
+FILTER(regex (str(?authorLink), ' authorLink + ' , 'i') ). 
+FILTER(lang(?bookName) = 'en') 
+FILTER(lang(?bookAbstract) = 'en') 
+FILTER(lang(?comment) = 'en') 
+}
+
+
+
+// Author Detail
+
+
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+        PREFIX ontology: <http://dbpedia.org/ontology/> 
+        SELECT distinct ?authorLink ?authorName ?placeOfBirthLink ?PlaceOfBirth ?latitude ?longitude WHERE { 
+        ?authorLink a dbo:Person; 
+            rdfs:label ?authorName; 
+            dbo:birthPlace ?placeOfBirthLink. 
+        ?placeOfBirthLink rdfs:label ?PlaceOfBirth; 
+            geo:lat ?latitude; 
+            geo:long ?longitude. 
+
+        FILTER(regex (str(?authorLink), ' authorLink + ', 'i') ). 
+        FILTER(lang(?authorName) = 'en') 
+        FILTER(lang(?PlaceOfBirth) = 'en') 
+    }
